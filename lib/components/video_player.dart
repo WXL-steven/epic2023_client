@@ -25,7 +25,7 @@ class MyScreenState extends State<MyScreen> {
       final videoPath = await extractVideo();
       player.open(Media(videoPath));
       player.setPlaylistMode(PlaylistMode.single);
-      logManager.addLog(level: LogLevel.info, componentName: "global", message: "Video player initialized.");
+      logManager.addLog(level: LogLevel.info, componentName: "global", message: "Video loaded from $videoPath.");
     });
   }
 
