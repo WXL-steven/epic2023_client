@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:provider/provider.dart';
@@ -20,11 +19,11 @@ class MyScreenState extends State<MyScreen> {
   @override
   void initState() {
     super.initState();
-    final logManager = context.read<LogManager>();
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final logManager = context.read<LogManager>();
       final videoPath = await extractVideo();
-      player.open(Media(videoPath));
-      player.setPlaylistMode(PlaylistMode.single);
+      await player.open(Media(videoPath));
+      await player.setPlaylistMode(PlaylistMode.single);
       logManager.addLog(level: LogLevel.info, componentName: "global", message: "Video loaded from $videoPath.");
     });
   }
