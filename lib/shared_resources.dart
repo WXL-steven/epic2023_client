@@ -564,7 +564,10 @@ class PlayerManager extends ChangeNotifier {
       componentName: 'PlayerManager',
       message: 'Video player paused',
     );
-    notifyListeners();
+    // 等待500ms，确保视频播放器已经暂停
+    Future.delayed(const Duration(milliseconds: 500), () {
+      notifyListeners();
+    });
   }
 
   /// 静音
