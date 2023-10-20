@@ -22,7 +22,9 @@ class MyScreenState extends State<MyScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final logManager = context.read<LogManager>();
       final videoPath = await extractVideo();
+      debugPrint("Successfully extracted video to $videoPath.");
       await player.open(Media(videoPath));
+      debugPrint("Successfully opened video.");
       await player.setPlaylistMode(PlaylistMode.single);
       logManager.addLog(level: LogLevel.info, componentName: "global", message: "Video loaded from $videoPath.");
     });
