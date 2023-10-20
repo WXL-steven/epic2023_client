@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:epic2023/shared_resources.dart' show DeviceInfo, DeviceStatus,
-DeviceStatusEnum, DevicesInfoManager, VideoPlayerSwitcher, deviceIconMap,
-deviceList, deviceReadableNameMap, deviceStatusReadableNameMap,
-showAboutDialogWithContent;
+import 'package:epic2023/shared_resources.dart' show DeviceInfo, DeviceStatus, DeviceStatusEnum, DevicesInfoManager, PlayerManager, deviceIconMap, deviceList, deviceReadableNameMap, deviceStatusReadableNameMap, showAboutDialogWithContent;
 import 'package:epic2023/websocket_manager.dart' show WebSocketManager;
 import 'package:window_manager/window_manager.dart';
 
@@ -33,7 +30,7 @@ class _OverviewPageState extends State<OverviewPage> {
         clipBehavior: Clip.hardEdge,
         child: InkWell(
           onTap: () {
-            context.read<VideoPlayerSwitcher>().setPlaying(true);
+            context.read<PlayerManager>().play();
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),

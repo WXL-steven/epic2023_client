@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:provider/provider.dart';
 
-import 'package:epic2023/shared_resources.dart' show VideoPlayerSwitcher, LogManager, LogLevel, extractVideo;
+import 'package:epic2023/shared_resources.dart' show PlayerManager;
 
 class MyScreen extends StatefulWidget {
   const MyScreen({Key? key}) : super(key: key);
@@ -12,27 +11,7 @@ class MyScreen extends StatefulWidget {
 }
 
 class MyScreenState extends State<MyScreen> {
-  late final player = Player();
-  late final controller = VideoController(player);
   bool _unmute = false;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final logManager = context.read<LogManager>();
-      final videoPath = await extractVideo();
-      await player.open(Media(videoPath));
-      await player.setPlaylistMode(PlaylistMode.single);
-      logManager.addLog(level: LogLevel.info, componentName: "global", message: "Video loaded from $videoPath.");
-    });
-  }
-
-  @override
-  void dispose() {
-    player.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,16 +33,16 @@ class MyScreenState extends State<MyScreen> {
               onTap: () {
                 setState(() {
                   _unmute = !_unmute;
-                  player.setVolume(_unmute ? 0 : 100);
+                  _unmute
+                    ? context.read<PlayerManager>().unmute()
+                    : context.read<PlayerManager>().mute();
                 });
               },
             ),
             PopupMenuItem(
               child: const Text('关闭'),
               onTap: () {
-                player.dispose();
-                context.read<LogManager>().addLog(level: LogLevel.info, componentName: "global", message: "Video player closed.");
-                context.read<VideoPlayerSwitcher>().setPlaying(false);
+                context.read<PlayerManager>().pause();
               },
             ),
           ],
@@ -72,7 +51,7 @@ class MyScreenState extends State<MyScreen> {
       child: Center(
         child: SizedBox(
           child: Video(
-            controller: controller,
+            controller: context.watch<PlayerManager>().controller,
             controls: NoVideoControls,
           ),
         ),

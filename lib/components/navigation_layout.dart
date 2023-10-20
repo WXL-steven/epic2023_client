@@ -6,7 +6,7 @@ import 'package:epic2023/components/dashboard_layout.dart' show DashboardPage;
 import 'package:epic2023/components/statistics_layout.dart' show StatisticsPage;
 import 'package:epic2023/components/log_layout.dart' show LogPage;
 import 'package:epic2023/components/video_player.dart' show MyScreen;
-import 'package:epic2023/shared_resources.dart' show VideoPlayerSwitcher, GarbageLoadData;
+import 'package:epic2023/shared_resources.dart' show GarbageLoadData, PlayerManager, extractVideo;
 import 'package:provider/provider.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -23,7 +23,18 @@ class _NavigationPage extends State<NavigationPage> {
   @override
   void dispose() {
     _pageController.dispose();
+    PlayerManager().dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final playerManager = context.read<PlayerManager>();
+      final videoPath = await extractVideo();
+      await playerManager.init(videoPath);
+    });
   }
 
   @override
@@ -59,7 +70,7 @@ class _NavigationPage extends State<NavigationPage> {
           child: child,
         );
       },
-      child: context.watch<VideoPlayerSwitcher>().isPlaying
+      child: context.watch<PlayerManager>().isPlaying
           ? const MyScreen()
       : Scaffold(
         body: SafeArea(

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show ByteData, Uint8List, rootBundle;
+import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
@@ -367,16 +369,16 @@ class LogManager with ChangeNotifier {
 }
 
 /// 视频播放器切换器类，使用 ChangeNotifier 进行状态管理
-class VideoPlayerSwitcher with ChangeNotifier {
-  bool _isPlaying = false;
-
-  bool get isPlaying => _isPlaying;
-
-  void setPlaying(bool isPlaying) {
-    _isPlaying = isPlaying;
-    notifyListeners();
-  }
-}
+// class VideoPlayerSwitcher with ChangeNotifier {
+//   bool _isPlaying = false;
+//
+//   bool get isPlaying => _isPlaying;
+//
+//   void setPlaying(bool isPlaying) {
+//     _isPlaying = isPlaying;
+//     notifyListeners();
+//   }
+// }
 
 /// 提取视频文件到缓存目录
 Future<String> extractVideo() async {
@@ -434,31 +436,37 @@ class DashboardManager with ChangeNotifier {
   String? get lastResult => _lastResult;
   Uint8List? get realtime => _realtime;
 
+  /// 设置神经网络状态
   void setNNStatus(DashboardStatus status) {
     _nnStatus = status;
     notifyListeners();
   }
 
+  /// 设置传送带状态
   void setCBStatus(DashboardStatus status) {
     _cbStatus = status;
     notifyListeners();
   }
 
+  /// 设置压缩机状态
   void setCPStatus(DashboardStatus status) {
     _cpStatus = status;
     notifyListeners();
   }
 
+  /// 更新最后识别的物体图像
   void updateLastObjectImage(Uint8List? image) {
     _lastObject = image;
     notifyListeners();
   }
 
+  /// 更新最后识别的结果
   void updateLastResult(String? result) {
     _lastResult = result;
     notifyListeners();
   }
 
+  /// 更新实时的物体图像
   void updateRealtime(Uint8List? image) {
     _realtime = image;
     notifyListeners();
@@ -471,6 +479,7 @@ class DashboardManager with ChangeNotifier {
   }
 }
 
+/// 显示关于对话框
 void showAboutDialogWithContent(BuildContext context) {
   showDialog(
     context: context,
@@ -496,4 +505,87 @@ void showAboutDialogWithContent(BuildContext context) {
       );
     },
   );
+}
+
+/// 视频播放器管理类，使用单例模式和 ChangeNotifier 进行状态管理
+class PlayerManager extends ChangeNotifier {
+  static final PlayerManager _singleton = PlayerManager._internal();
+
+  factory PlayerManager() {
+    return _singleton;
+  }
+
+  PlayerManager._internal();
+
+  bool _isPlaying = false;
+  late final Player _player;
+  late final VideoController _controller;
+
+  VideoController get controller => _controller;
+  bool get isPlaying => _isPlaying;
+
+  init(String videoPath) {
+    _player = Player();
+    _controller = VideoController(_player);
+    _player.open(Media(videoPath), play: false);
+    _player.setPlaylistMode(PlaylistMode.single);
+    LogManager().addLog(
+      level: LogLevel.info,
+      componentName: 'PlayerManager',
+      message: 'Video player successfully loaded video from $videoPath',
+    );
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
+  }
+
+  /// 播放
+  void play() {
+    _player.play();
+    _isPlaying = true;
+    LogManager().addLog(
+      level: LogLevel.info,
+      componentName: 'PlayerManager',
+      message: 'Video player started playing',
+    );
+    notifyListeners();
+  }
+
+  /// 暂停
+  void pause() {
+    _player.pause();
+    _isPlaying = false;
+    LogManager().addLog(
+      level: LogLevel.info,
+      componentName: 'PlayerManager',
+      message: 'Video player paused',
+    );
+    notifyListeners();
+  }
+
+  /// 静音
+  void mute() {
+    _player.setVolume(0);
+    LogManager().addLog(
+      level: LogLevel.info,
+      componentName: 'PlayerManager',
+      message: 'Video player muted',
+    );
+    notifyListeners();
+  }
+
+  /// 取消静音
+  void unmute() {
+    _player.setVolume(100);
+    LogManager().addLog(
+      level: LogLevel.info,
+      componentName: 'PlayerManager',
+      message: 'Video player unmuted',
+    );
+    notifyListeners();
+  }
 }
