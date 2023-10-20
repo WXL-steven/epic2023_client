@@ -22,9 +22,7 @@ class MyScreenState extends State<MyScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final logManager = context.read<LogManager>();
       final videoPath = await extractVideo();
-      debugPrint("Successfully extracted video to $videoPath.");
       await player.open(Media(videoPath));
-      debugPrint("Successfully opened video.");
       await player.setPlaylistMode(PlaylistMode.single);
       logManager.addLog(level: LogLevel.info, componentName: "global", message: "Video loaded from $videoPath.");
     });
@@ -63,6 +61,7 @@ class MyScreenState extends State<MyScreen> {
             PopupMenuItem(
               child: const Text('关闭'),
               onTap: () {
+                player.dispose();
                 context.read<LogManager>().addLog(level: LogLevel.info, componentName: "global", message: "Video player closed.");
                 context.read<VideoPlayerSwitcher>().setPlaying(false);
               },
