@@ -62,6 +62,7 @@ class _NavigationPage extends State<NavigationPage> {
     }
 
     return PageTransitionSwitcher(
+      duration: const Duration(milliseconds: 500),
       transitionBuilder: (Widget child, Animation<double> animation, Animation<double> secondaryAnimation) {
         return SharedAxisTransition(
           animation: animation,
