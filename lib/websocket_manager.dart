@@ -187,6 +187,7 @@ bool updateWorkStatus(Map<String, dynamic> data) {
 
 /// 识别结果管理
 bool updateResult(Map<String, dynamic> data) {
+  late final String reEncodedResult;
   final String result = data.containsKey('result') && data['result'] is String
       ? data['result']
       : 'null';
@@ -200,9 +201,9 @@ bool updateResult(Map<String, dynamic> data) {
     return false;
   }
 
-  // 尝试将结果解析为JSON
   try {
-    jsonDecode(result);
+    final String decodedResult = jsonDecode(result);
+    reEncodedResult = const JsonEncoder.withIndent('  ').convert(jsonDecode(decodedResult));
   } catch (e) {
     LogManager().addLog(
       level: LogLevel.warning,
@@ -213,7 +214,7 @@ bool updateResult(Map<String, dynamic> data) {
   }
 
   /// 更新识别结果
-  DashboardManager().updateLastResult(result);
+  DashboardManager().updateLastResult(reEncodedResult);
   return true;
 }
 
@@ -366,6 +367,7 @@ class WebSocketManager {
         componentName: 'WebSocketParser',
         message: 'WebSocket connection established'
       );
+      DashboardManager().setCPStatus(DashboardStatus.idle);
       DeviceStatus().setDeviceStatus('backend', DeviceStatusEnum.ready);
       _socket!.listen(
             (data) {
