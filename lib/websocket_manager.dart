@@ -208,7 +208,7 @@ bool updateResult(Map<String, dynamic> data) {
     LogManager().addLog(
       level: LogLevel.warning,
       componentName: 'WebSocketParser',
-      message: 'The back end gives an invalid result'
+      message: 'Cannot decode the result: $e'
     );
     return false;
   }
