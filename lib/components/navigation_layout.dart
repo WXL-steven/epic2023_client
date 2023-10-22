@@ -4,6 +4,7 @@ import 'package:animations/animations.dart';
 import 'package:epic2023/components/overview_layout.dart' show OverviewPage;
 import 'package:epic2023/components/dashboard_layout.dart' show DashboardPage;
 import 'package:epic2023/components/statistics_layout.dart' show StatisticsPage;
+import 'package:epic2023/components/history_layout.dart' show HistoryPage;
 import 'package:epic2023/components/log_layout.dart' show LogPage;
 import 'package:epic2023/components/video_player.dart' show MyScreen;
 import 'package:epic2023/shared_resources.dart' show GarbageLoadData, PlayerManager, extractVideo;
@@ -104,6 +105,12 @@ class _NavigationPage extends State<NavigationPage> {
                     padding: EdgeInsets.symmetric(vertical: 4),
                   ),
                   NavigationRailDestination(
+                    icon: Icon(Icons.watch_later_outlined),
+                    selectedIcon: Icon(Icons.watch_later),
+                    label: Text('记录'),
+                    padding: EdgeInsets.symmetric(vertical: 4),
+                  ),
+                  NavigationRailDestination(
                     icon: Icon(Icons.bug_report_outlined),
                     selectedIcon: Icon(Icons.bug_report),
                     label: Text('日志'),
@@ -132,6 +139,9 @@ class _NavigationPage extends State<NavigationPage> {
                     ),
                     Center(
                       child: StatisticsPage(),
+                    ),
+                    Center(
+                      child: HistoryPage(),
                     ),
                     Center(
                       child: LogPage(),

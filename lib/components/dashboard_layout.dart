@@ -152,9 +152,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                               child: Center(
                                                 child: _lastIdentificationImage != null
                                                     ? Image.memory(
-                                                  _lastIdentificationImage!,
-                                                  gaplessPlayback: true,  // 设置为true以避免闪烁
-                                                )
+                                                      _lastIdentificationImage!,
+                                                      gaplessPlayback: true,  // 设置为true以避免闪烁
+                                                    )
                                                     : const Icon(Icons.image_not_supported_outlined, size: 64),
                                               ),
                                             ),

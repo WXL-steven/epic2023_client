@@ -5,7 +5,7 @@ import 'dart:typed_data';
 
 import 'package:epic2023/shared_resources.dart' show LogLevel, LogManager,
 textToStatusMap, DeviceStatusEnum, DeviceStatus, TrashStatistics,
-GarbageLoadData, DashboardManager, DashboardStatus;
+GarbageLoadData, DashboardManager, DashboardStatus, HistoryModel;
 
 /// 状态管理
 bool updateDeviceStatus(Map<String, dynamic> data) {
@@ -188,6 +188,7 @@ bool updateWorkStatus(Map<String, dynamic> data) {
 /// 识别结果管理
 bool updateResult(Map<String, dynamic> data) {
   late final String reEncodedResult;
+  late final List<dynamic> decodedResult;
   final String result = data.containsKey('result') && data['result'] is String
       ? data['result']
       : 'null';
@@ -202,8 +203,8 @@ bool updateResult(Map<String, dynamic> data) {
   }
 
   try {
-    final String decodedResult = jsonDecode(result);
-    reEncodedResult = const JsonEncoder.withIndent('  ').convert(jsonDecode(decodedResult));
+    decodedResult = jsonDecode(result);
+    reEncodedResult = const JsonEncoder.withIndent('  ').convert(decodedResult);
   } catch (e) {
     LogManager().addLog(
       level: LogLevel.warning,
@@ -215,6 +216,9 @@ bool updateResult(Map<String, dynamic> data) {
 
   /// 更新识别结果
   DashboardManager().updateLastResult(reEncodedResult);
+  if (decodedResult[0].containsKey('label') && decodedResult[0]['label'] is String) {
+    HistoryModel().addRecord(decodedResult[0]['label'], reEncodedResult, DateTime.now());
+  }
   return true;
 }
 
@@ -368,6 +372,7 @@ class WebSocketManager {
         message: 'WebSocket connection established'
       );
       DashboardManager().setCPStatus(DashboardStatus.idle);
+      DashboardManager().setNNStatus(DashboardStatus.idle);
       DeviceStatus().setDeviceStatus('backend', DeviceStatusEnum.ready);
       _socket!.listen(
             (data) {
@@ -386,6 +391,8 @@ class WebSocketManager {
         },
         onDone: () {
           DeviceStatus().setDeviceStatus('backend', DeviceStatusEnum.offline);
+          DashboardManager().setNNStatus(DashboardStatus.unknown);
+          DashboardManager().setCPStatus(DashboardStatus.unknown);
           LogManager().addLog(
             level: LogLevel.warning,
             componentName: 'WebSocketParser',

@@ -6,7 +6,7 @@ import 'package:window_manager/window_manager.dart';
 import 'package:epic2023/websocket_manager.dart' show WebSocketManager;
 import 'package:epic2023/shared_resources.dart' show TrashStatistics,
 DeviceStatus, DevicesInfoManager, LogManager, GarbageLoadData, DashboardManager,
-PlayerManager;
+PlayerManager, HistoryModel;
 import 'package:epic2023/components/navigation_layout.dart' show NavigationPage;
 
 void main() async {
@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => GarbageLoadData()),
           ChangeNotifierProvider(create: (context) => DashboardManager()),
           ChangeNotifierProvider(create: (context) => PlayerManager()),
+          ChangeNotifierProvider(create: (context) => HistoryModel()),
         ],
         child: const NavigationPage(),
       ),

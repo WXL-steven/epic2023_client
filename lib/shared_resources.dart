@@ -368,18 +368,6 @@ class LogManager with ChangeNotifier {
   }
 }
 
-/// 视频播放器切换器类，使用 ChangeNotifier 进行状态管理
-// class VideoPlayerSwitcher with ChangeNotifier {
-//   bool _isPlaying = false;
-//
-//   bool get isPlaying => _isPlaying;
-//
-//   void setPlaying(bool isPlaying) {
-//     _isPlaying = isPlaying;
-//     notifyListeners();
-//   }
-// }
-
 /// 提取视频文件到缓存目录
 Future<String> extractVideo() async {
   const filename = "video.mp4";
@@ -508,7 +496,7 @@ void showAboutDialogWithContent(BuildContext context) {
 }
 
 /// 视频播放器管理类，使用单例模式和 ChangeNotifier 进行状态管理
-class PlayerManager extends ChangeNotifier {
+class PlayerManager with ChangeNotifier {
   static final PlayerManager _singleton = PlayerManager._internal();
 
   factory PlayerManager() {
@@ -589,6 +577,59 @@ class PlayerManager extends ChangeNotifier {
       componentName: 'PlayerManager',
       message: 'Video player unmuted',
     );
+    notifyListeners();
+  }
+}
+
+/// 历史记录结构体
+class HistoryRecord {
+  Uint8List? image;
+  String category;
+  String metadata;
+  DateTime time;
+
+  HistoryRecord({
+    required this.image,
+    required this.category,
+    required this.metadata,
+    required this.time,
+  });
+}
+
+/// 历史记录管理类，使用单例模式和 ChangeNotifier 进行状态管理
+class HistoryModel with ChangeNotifier {
+  static HistoryModel? _instance;
+
+  factory HistoryModel() {
+    _instance ??= HistoryModel._internal();
+    return _instance!;
+  }
+
+  HistoryModel._internal();
+
+  List<HistoryRecord> _historyList = [];
+
+  List<HistoryRecord> get historyList => _historyList;
+
+  void addRecord(String category, String metadata, DateTime time) {
+    Uint8List? image = DashboardManager().lastObject;
+    final record = HistoryRecord(
+      image: image,
+      category: category,
+      metadata: metadata,
+      time: time,
+    );
+    _historyList.add(record);
+    notifyListeners();
+  }
+
+  void removeRecord(int index) {
+    _historyList.removeAt(index);
+    notifyListeners();
+  }
+
+  void clearRecords() {
+    _historyList.clear();
     notifyListeners();
   }
 }
