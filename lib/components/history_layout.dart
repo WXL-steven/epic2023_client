@@ -72,7 +72,7 @@ class HistoryRecordCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Card(
-          elevation: 20,
+          // elevation: 20,
           clipBehavior: Clip.hardEdge,
           child: Column(
             children:[
