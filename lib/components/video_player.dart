@@ -34,8 +34,8 @@ class MyScreenState extends State<MyScreen> {
                 setState(() {
                   _unmute = !_unmute;
                   _unmute
-                    ? context.read<PlayerManager>().unmute()
-                    : context.read<PlayerManager>().mute();
+                    ? context.read<PlayerManager>().mute()
+                    : context.read<PlayerManager>().unmute();
                 });
               },
             ),
