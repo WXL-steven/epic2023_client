@@ -390,9 +390,10 @@ class WebSocketManager {
           );
         },
         onDone: () {
-          DeviceStatus().setDeviceStatus('backend', DeviceStatusEnum.offline);
+          DeviceStatus().setAllOffline();
           DashboardManager().setNNStatus(DashboardStatus.unknown);
           DashboardManager().setCPStatus(DashboardStatus.unknown);
+          DashboardManager().setCBStatus(DashboardStatus.unknown);
           LogManager().addLog(
             level: LogLevel.warning,
             componentName: 'WebSocketParser',

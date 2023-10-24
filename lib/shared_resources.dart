@@ -192,6 +192,15 @@ class DeviceStatus with ChangeNotifier {
       throw Exception('Invalid device name: $device');
     }
   }
+
+  /// 全部设置为离线
+  /// 用于断开连接时
+  void setAllOffline() {
+    _deviceStatusMap.forEach((key, value) {
+      _deviceStatusMap[key] = DeviceStatusEnum.offline;
+    });
+    notifyListeners();
+  }
 }
 
 /// 设备信息

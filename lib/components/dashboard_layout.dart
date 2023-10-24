@@ -140,7 +140,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 8),
-                                        child: Text("上一有效结果", style: Theme.of(context).textTheme.titleLarge),
+                                        child:
+                                        Text("上一有效结果", style: Theme.of(context).textTheme.titleLarge),
                                       ),
                                       const SizedBox(height: 16),
                                       Flexible(
@@ -173,7 +174,10 @@ class _DashboardPageState extends State<DashboardPage> {
                                                   const SizedBox(height: 16),
                                                   _lastIdentificationResult == null
                                                       ? const Center(child: Text("无"))
-                                                      : Text(_lastIdentificationResult!),
+                                                      : SelectableText(
+                                                        _lastIdentificationResult!,
+                                                        style: const TextStyle(fontFamily: 'JetBrainsMono', fontFamilyFallback: ['NotoSansSC']),
+                                                      ),
                                                 ],
                                               ),
                                             )

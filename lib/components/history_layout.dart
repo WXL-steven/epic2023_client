@@ -39,15 +39,37 @@ class HistoryRecordCard extends StatelessWidget {
 
   void showMetaData(BuildContext context) {
     final String _metadata = historyRecord.metadata;
+    final Uint8List? _image = historyRecord.image;
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("元数据"),
           content: Card(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 32.0),
-              child: Text(_metadata),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 32.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SelectableText(
+                      // 替换'  '为'    '
+                      _metadata.replaceAll('  ', '    '),
+                      style: const TextStyle(fontFamily: 'JetBrainsMono', fontFamilyFallback: ['NotoSansSC']),
+                    ),
+                    const SizedBox(height: 16),
+                    _image == null
+                        ? const Icon(
+                      Icons.image_not_supported_outlined,
+                      size: 100,
+                    )
+                        : Image.memory(
+                      _image,
+                      fit: BoxFit.contain,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
           actions: <Widget>[
@@ -126,7 +148,7 @@ class HistoryRecordCard extends StatelessWidget {
                           showMetaData(context);
                         },
                         child: Container(
-                          color: Colors.white38.withOpacity(0.1),  // 半透明的灰色蒙版
+                          color: Colors.white24.withOpacity(0.2),  // 半透明的灰色蒙版
                         ),
                       ),
                     ),
@@ -142,7 +164,7 @@ class HistoryRecordCard extends StatelessWidget {
                           index.toString(),
                           style: TextStyle(
                             fontSize: 32,
-                            color: Colors.blueGrey.shade800,
+                            color: Colors.blueGrey.shade900,
                             fontWeight: FontWeight.bold
                           ),
                         ),
