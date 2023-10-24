@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
@@ -19,13 +21,25 @@ void main() async {
   runApp(const MyApp());
 }
 
+class LinuxTouchScrollBehavior extends MaterialScrollBehavior {
+// Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+    PointerDeviceKind.unknown,
+  };
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: '2023工训',
+      scrollBehavior: LinuxTouchScrollBehavior(),
       theme: ThemeData(
         useMaterial3: true,
         fontFamily: 'NotoSansSC',
