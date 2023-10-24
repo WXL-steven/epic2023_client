@@ -7,7 +7,7 @@ import 'package:epic2023/components/statistics_layout.dart' show StatisticsPage;
 import 'package:epic2023/components/history_layout.dart' show HistoryPage;
 import 'package:epic2023/components/log_layout.dart' show LogPage;
 import 'package:epic2023/components/video_player.dart' show MyScreen;
-import 'package:epic2023/shared_resources.dart' show GarbageLoadData, PlayerManager, extractVideo;
+import 'package:epic2023/shared_resources.dart' show GarbageLoadData, PlayerManager, extractVideo, showOverLoadDialog, trashNameList, waringIgnoreState;
 import 'package:provider/provider.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -40,26 +40,19 @@ class _NavigationPage extends State<NavigationPage> {
 
   @override
   Widget build(BuildContext context) {
-    // 维护满载检测对话框
-    if (context.watch<GarbageLoadData>().getLoad("recyclable") >
-        context.watch<GarbageLoadData>().getLoad("max") * 50 / 100 ) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('满载提醒'),
-            content: const Text('可回收垃圾通接近满载，请及时清理垃圾桶'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('关闭'),
-              ),
-            ],
-          );
-        },
-      );
+    // 满载检测
+    for (String typeName in trashNameList) {
+      if (context.watch<GarbageLoadData>().getLoad(typeName) >
+          context.watch<GarbageLoadData>().getLoad("max") * 50 / 100
+          && waringIgnoreState[typeName] == false) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showOverLoadDialog(context, typeName);
+        });
+      }else if (context.watch<GarbageLoadData>().getLoad(typeName) <
+          context.watch<GarbageLoadData>().getLoad("max") * 50 / 100
+          && waringIgnoreState[typeName] == true) {
+        waringIgnoreState[typeName] = false;
+      }
     }
 
     return PageTransitionSwitcher(

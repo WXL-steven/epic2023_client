@@ -31,7 +31,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
             Expanded(
               child: ListTile(
                 title: Text(
-                  context.read<TrashStatistics>().getTrashCount(variety).toString(),
+                  context.watch<TrashStatistics>().getTrashCount(variety).toString(),
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text('$varietyName数量'),
@@ -59,14 +59,12 @@ class _StatisticsPageState extends State<StatisticsPage> {
           IntrinsicHeight(
             child: Row(
               children: <Widget>[
-                _buildVarietyOverviewInfo(context, 0),
-                const VerticalDivider(indent: 24, endIndent: 8),
-                _buildVarietyOverviewInfo(context, 1),
-                const VerticalDivider(indent: 24, endIndent: 8),
-                _buildVarietyOverviewInfo(context, 2),
-                const VerticalDivider(indent: 24, endIndent: 8),
-                _buildVarietyOverviewInfo(context, 3),
-                const VerticalDivider(indent: 24, endIndent: 8),
+                ...List.generate(4, (index) {
+                  return [
+                    _buildVarietyOverviewInfo(context, index),
+                    if (index != 3) const VerticalDivider(indent: 24, endIndent: 8),
+                  ];
+                }).expand((item) => item).toList(),
                 Expanded(
                   flex: 1,
                   child: Padding(

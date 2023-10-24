@@ -102,6 +102,17 @@ class GarbageLoadData extends ChangeNotifier {
     return _garbageLoad[type] ?? 0.0; // 如果请求的类型不存在，则返回 0.0
   }
 
+  // /// 获取全部垃圾负载，以List<double>形式返回(不包含最大负载)
+  // List<double> getLoadList() {
+  //   List<double> loadList = [];
+  //   _garbageLoad.forEach((key, value) {
+  //     if (key != 'max') {
+  //       loadList.add(value);
+  //     }
+  //   });
+  //   return loadList;
+  // }
+
   /// 设置特定垃圾种类的负载数据
   void setLoad(String type, double load) {
     _garbageLoad[type] = load;
@@ -110,6 +121,13 @@ class GarbageLoadData extends ChangeNotifier {
 }
 
 final trashNameList = ['hazardous', 'recyclable', 'kitchen', 'other'];
+
+Map<String, bool> waringIgnoreState = {
+  'hazardous': false,
+  'recyclable': false,
+  'kitchen': false,
+  'other': false,
+};
 
 final trashReadableNameMap = {
   'hazardous': '有害垃圾',
@@ -498,6 +516,29 @@ void showAboutDialogWithContent(BuildContext context) {
               Navigator.of(context).pop();
             },
           )
+        ],
+      );
+    },
+  );
+}
+
+/// 显示满载检测对话框
+void showOverLoadDialog(BuildContext context, String type) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        icon: Icon(Icons.warning_amber_outlined, size: 40,color: Theme.of(context).colorScheme.error),
+        title: const Text('满载警告'),
+        content: Text('${trashReadableNameMap[type]}接近满载，请及时清理垃圾桶'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              waringIgnoreState[type] = true;
+              Navigator.of(context).pop();
+            },
+            child: const Text('忽略'),
+          ),
         ],
       );
     },
