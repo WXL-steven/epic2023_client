@@ -397,7 +397,7 @@ class LogManager with ChangeNotifier {
 
 /// 提取视频文件到缓存目录
 Future<String> extractVideo() async {
-  const filename = "video.mp4";
+  const filename = "test.mp4";
   final cacheDir = await getTemporaryDirectory();
 
   if (!await Directory('${cacheDir.path}/.cache').exists()) {
