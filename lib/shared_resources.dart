@@ -683,3 +683,5 @@ class HistoryModel with ChangeNotifier {
     notifyListeners();
   }
 }
+
+bool isFullScreen = false;

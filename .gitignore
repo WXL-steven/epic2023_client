@@ -137,4 +137,3 @@ app.*.symbols
 !/dev/ci/**/Gemfile.lock
 !.vscode/settings.json
 /test/widget_test.dart
-/assets/videos/test.mp4

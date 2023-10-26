@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:epic2023/shared_resources.dart' show DeviceInfo, DeviceStatus, DeviceStatusEnum, DevicesInfoManager, PlayerManager, deviceIconMap, deviceList, deviceReadableNameMap, deviceStatusReadableNameMap, showAboutDialogWithContent;
+import 'package:epic2023/shared_resources.dart' show DeviceInfo, DeviceStatus,
+DeviceStatusEnum, DevicesInfoManager, PlayerManager, deviceIconMap, deviceList,
+deviceReadableNameMap, deviceStatusReadableNameMap, showAboutDialogWithContent,
+isFullScreen;
 import 'package:epic2023/websocket_manager.dart' show WebSocketManager;
 import 'package:window_manager/window_manager.dart';
 
@@ -19,8 +22,6 @@ class _OverviewPageState extends State<OverviewPage> {
   final double _titleStartCollapsed  = 25.0;
   final double _titleBottomExpanded = 15.0;
   final double _titleBottomCollapsed  = 25.0;
-
-  bool _isFullScreen = false;
 
   List<Widget> _overviewCardList(BuildContext context) {
     List<Widget> cardList = [];
@@ -197,12 +198,12 @@ class _OverviewPageState extends State<OverviewPage> {
               ),
               const SizedBox(width: 8.0),
               IconButton(
-                icon: _isFullScreen ? const Icon(Icons.fullscreen_exit_outlined) : const Icon(Icons.fullscreen_outlined),
-                tooltip: _isFullScreen ? '还原' : '最大化',
+                icon: isFullScreen ? const Icon(Icons.fullscreen_exit_outlined) : const Icon(Icons.fullscreen_outlined),
+                tooltip: isFullScreen ? '还原' : '最大化',
                 onPressed: () {
                   setState(() {
-                    _isFullScreen = !_isFullScreen;
-                    if (_isFullScreen) {
+                    isFullScreen = !isFullScreen;
+                    if (isFullScreen) {
                       windowManager.setFullScreen(true);
                     } else {
                       windowManager.setFullScreen(false);
