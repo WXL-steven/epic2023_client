@@ -43,10 +43,11 @@ class _NavigationPage extends State<NavigationPage> {
     // 满载检测
     for (String typeName in trashNameList) {
       if (context.watch<GarbageLoadData>().getLoad(typeName) >
-          context.watch<GarbageLoadData>().getLoad("max") * 50 / 100
+          context.read<GarbageLoadData>().getLoad("max") * 50 / 100
           && waringIgnoreState[typeName] == false) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showOverLoadDialog(context, typeName);
+          waringIgnoreState[typeName] == true;
         });
       }else if (context.watch<GarbageLoadData>().getLoad(typeName) <
           context.watch<GarbageLoadData>().getLoad("max") * 50 / 100
