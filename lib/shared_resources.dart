@@ -526,6 +526,7 @@ void showAboutDialogWithContent(BuildContext context) {
 void showOverLoadDialog(BuildContext context, String type) {
   showDialog(
     context: context,
+    barrierDismissible: false,
     builder: (BuildContext context) {
       return AlertDialog(
         icon: Icon(Icons.warning_amber_outlined, size: 40,color: Theme.of(context).colorScheme.error),
