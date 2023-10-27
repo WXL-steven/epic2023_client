@@ -534,7 +534,6 @@ void showOverLoadDialog(BuildContext context, String type) {
         actions: <Widget>[
           TextButton(
             onPressed: () {
-              waringIgnoreState[type] = true;
               Navigator.of(context).pop();
             },
             child: const Text('忽略'),
