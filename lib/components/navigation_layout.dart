@@ -45,8 +45,8 @@ class _NavigationPage extends State<NavigationPage> {
       if (context.watch<GarbageLoadData>().getLoad(typeName) >
           context.read<GarbageLoadData>().getLoad("max") * 50 / 100
           && waringIgnoreState[typeName] == false) {
+        waringIgnoreState[typeName] == true;
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          waringIgnoreState[typeName] == true;
           showOverLoadDialog(context, typeName);
         });
       }else if (context.watch<GarbageLoadData>().getLoad(typeName) <
